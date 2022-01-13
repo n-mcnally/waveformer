@@ -1,9 +1,9 @@
-import { createAudioContext, resumeAudioContext } from '../utils/audio-context';
-import { measureBuffer } from '../utils/measure-buffer';
-import { WaveformerRenderer } from './renderer';
+import { createAudioContext, resumeAudioContext } from "../utils/audio-context";
+import { measureBuffer } from "../utils/measure-buffer";
+import { WaveformerRenderer } from "./renderer";
 
 const defaultConfig: WaveformerConfig = {
-  color: '#666',
+  color: "#666",
   barWidth: 6,
   barGap: 0.4,
   height: 906,
@@ -58,13 +58,13 @@ export class Waveformer {
   private convertFileToAudioBuffer(file: File): Promise<AudioBuffer> {
     resumeAudioContext(this.audioContext);
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const reader = new FileReader();
 
-      reader.onload = event => {
+      reader.onload = (event) => {
         this.audioContext.decodeAudioData(
           event.target?.result as ArrayBuffer,
-          buffer => resolve(buffer)
+          (buffer) => resolve(buffer)
         );
       };
 
@@ -74,22 +74,18 @@ export class Waveformer {
 
   private parseAudioBuffer(audioBuffer: AudioBuffer): [number, number][] {
     const buffer = audioBuffer.getChannelData(0);
-
-    const sections = this.config.width;
-    const length = Math.floor(buffer.length / sections);
-    const maxHeight = this.config.height;
+    const length = Math.floor(buffer.length / this.config.width);
 
     const values = [];
 
-    for (let i = 0; i < sections; i += this.config.barWidth) {
+    for (let i = 0; i < this.config.width; i += this.config.barWidth) {
       values.push(measureBuffer(i * length, length, buffer) * 10_000);
     }
 
     const bars: [number, number][] = [];
+    const scale = this.config.height / Math.max(...values);
 
-    for (let i = 0; i < sections; i += this.config.barWidth) {
-      const scale = maxHeight / Math.max(...values);
-
+    for (let i = 0; i < this.config.width; i += this.config.barWidth) {
       const value = measureBuffer(i * length, length, buffer) * 10_000;
 
       const scaledValue = value * scale + 1;
