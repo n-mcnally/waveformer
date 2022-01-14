@@ -11,11 +11,11 @@ A library for creating waveform images from audio files in the browser.
 Optional configuration values can be passed when creating an instance.
 
 ```ts
-color?: string; // #666
-barGap?: number; // 0.4
-barWidth?: number; // 6
-height?: number; // 936
-width?: number; // 132
+color: string; // #666
+barGap: number; // 0.4
+barWidth: number; // 6
+height: number; // 936
+width: number; // 132
 ```
 
 ### Usage
