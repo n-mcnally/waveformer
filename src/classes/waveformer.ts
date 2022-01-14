@@ -1,9 +1,9 @@
-import { createAudioContext, resumeAudioContext } from "../utils/audio-context";
-import { measureBuffer } from "../utils/measure-buffer";
-import { WaveformerRenderer } from "./renderer";
+import { createAudioContext, resumeAudioContext } from '../utils/audio-context';
+import { measureBuffer } from '../utils/measure-buffer';
+import { WaveformerRenderer } from './renderer';
 
 const defaultConfig: WaveformerConfig = {
-  color: "#666",
+  color: '#666',
   barWidth: 6,
   barGap: 0.4,
   height: 906,
@@ -38,19 +38,19 @@ export class Waveformer {
 
     const imageData = this.renderer.getImageData();
 
-    this.renderer.clear();
-
     return imageData;
   }
 
-  async convertFileToDataUrl(file: File): Promise<string> {
+  async convertFileToDataUrl(
+    file: File,
+    type?: string,
+    quality?: number
+  ): Promise<string> {
     const audioBuffer = await this.convertFileToAudioBuffer(file);
 
     this.renderer.drawWaveform(this.parseAudioBuffer(audioBuffer));
 
-    const dataUrl = this.renderer.getDataUrl();
-
-    this.renderer.clear();
+    const dataUrl = this.renderer.getDataUrl(type, quality);
 
     return dataUrl;
   }
@@ -58,13 +58,13 @@ export class Waveformer {
   private convertFileToAudioBuffer(file: File): Promise<AudioBuffer> {
     resumeAudioContext(this.audioContext);
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const reader = new FileReader();
 
-      reader.onload = (event) => {
+      reader.onload = event => {
         this.audioContext.decodeAudioData(
           event.target?.result as ArrayBuffer,
-          (buffer) => resolve(buffer)
+          buffer => resolve(buffer)
         );
       };
 
