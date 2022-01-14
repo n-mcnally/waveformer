@@ -1,8 +1,4 @@
-export function measureBuffer(
-  position: number,
-  length: number,
-  data: Float32Array
-) {
+export function measureBuffer(position: number, length: number, data: Float32Array) {
   let sum = 0.0;
 
   for (let i = position; i <= position + length - 1; i++) {

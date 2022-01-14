@@ -37,11 +37,11 @@ const imageData = waveformer.convertFileToImageData(file);
 
 ---
 
-- Instance must be instantiated after first user event or gesture.
+- Instance must be instantiated after first user event or gesture. [(Details)](https://developers.google.com/web/updates/2017/09/autoplay-policy-changes)
 - Uses browser `Canvas` and `AudioContext` API's.
 
 ### License
 
 ---
 
-[MIT](https://oss.ninja/mit)
+[MIT](https://oss.ninja/mit/n-mcnally)

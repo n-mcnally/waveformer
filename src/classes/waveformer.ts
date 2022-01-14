@@ -41,11 +41,7 @@ export class Waveformer {
     return imageData;
   }
 
-  async convertFileToDataUrl(
-    file: File,
-    type?: string,
-    quality?: number
-  ): Promise<string> {
+  async convertFileToDataUrl(file: File, type?: string, quality?: number): Promise<string> {
     const audioBuffer = await this.convertFileToAudioBuffer(file);
 
     this.renderer.drawWaveform(this.parseAudioBuffer(audioBuffer));
@@ -62,10 +58,7 @@ export class Waveformer {
       const reader = new FileReader();
 
       reader.onload = event => {
-        this.audioContext.decodeAudioData(
-          event.target?.result as ArrayBuffer,
-          buffer => resolve(buffer)
-        );
+        this.audioContext.decodeAudioData(event.target?.result as ArrayBuffer, buffer => resolve(buffer));
       };
 
       reader.readAsArrayBuffer(file);

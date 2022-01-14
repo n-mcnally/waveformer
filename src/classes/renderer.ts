@@ -1,4 +1,4 @@
-import { WaveformerConfig } from "./waveformer";
+import { WaveformerConfig } from './waveformer';
 
 export class WaveformerRenderer {
   canvas: HTMLCanvasElement;
@@ -6,14 +6,12 @@ export class WaveformerRenderer {
   dirty = false;
 
   constructor(private config: WaveformerConfig) {
-    this.canvas = document.createElement("canvas");
+    this.canvas = document.createElement('canvas');
 
-    const context = this.canvas.getContext("2d");
+    const context = this.canvas.getContext('2d');
 
     if (!context) {
-      throw new Error(
-        "Failed to create a `WaveformerRenderer.canvas` instance."
-      );
+      throw new Error('Failed to create a `WaveformerRenderer.canvas` instance.');
     }
 
     this.context = context;
@@ -44,17 +42,12 @@ export class WaveformerRenderer {
     this.dirty = true;
   }
 
-  getDataUrl(type = "image/png", quality = 1.0): string {
+  getDataUrl(type = 'image/png', quality = 1.0): string {
     return this.canvas.toDataURL(type, quality);
   }
 
   getImageData(): ImageData {
-    return this.context.getImageData(
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height
-    );
+    return this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
   }
 
   private clear(): void {

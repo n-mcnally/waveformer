@@ -31,8 +31,6 @@ export function resumeAudioContext(context: AudioContext): void {
   context.resume();
 
   if (context.state !== 'running') {
-    throw new Error(
-      'Failed to resume `AudioContext`, have you waited for the user gesture.'
-    );
+    throw new Error('Failed to resume `AudioContext`, have you waited for a user gesture.');
   }
 }
