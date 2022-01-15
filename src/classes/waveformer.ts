@@ -1,4 +1,4 @@
-import { createAudioContext, resumeAudioContext } from '../utils/audio-context';
+import { createAudioContext } from '../utils/audio-context';
 import { measureBuffer } from '../utils/measure-buffer';
 import { WaveformerRenderer } from './renderer';
 
@@ -19,14 +19,12 @@ export interface WaveformerConfig {
 }
 
 export class Waveformer {
-  audioContext: AudioContext;
+  audioContext?: AudioContext;
   renderer: WaveformerRenderer;
   config: WaveformerConfig;
 
   constructor(config?: Partial<WaveformerConfig>) {
     this.config = { ...defaultConfig, ...(config || {}) };
-
-    this.audioContext = createAudioContext();
 
     this.renderer = new WaveformerRenderer(this.config);
   }
@@ -51,14 +49,20 @@ export class Waveformer {
     return dataUrl;
   }
 
+  close(): void {
+    this.audioContext?.close();
+
+    this.audioContext = undefined;
+  }
+
   private convertFileToAudioBuffer(file: File): Promise<AudioBuffer> {
-    resumeAudioContext(this.audioContext);
+    this.resumeAudioContext();
 
     return new Promise(resolve => {
       const reader = new FileReader();
 
       reader.onload = event => {
-        this.audioContext.decodeAudioData(event.target?.result as ArrayBuffer, buffer => resolve(buffer));
+        this.audioContext?.decodeAudioData(event.target?.result as ArrayBuffer, buffer => resolve(buffer));
       };
 
       reader.readAsArrayBuffer(file);
@@ -89,7 +93,19 @@ export class Waveformer {
     return bars;
   }
 
-  close(): void {
-    this.audioContext.close();
+  private resumeAudioContext(): void {
+    if (!this.audioContext) {
+      this.audioContext = createAudioContext();
+    }
+
+    if (this.audioContext.state === 'closed') {
+      throw new Error('Unable to resume a closed `AudioContext`.');
+    }
+
+    this.audioContext.resume();
+
+    if (this.audioContext.state !== 'running') {
+      throw new Error('Failed to spawn `AudioContext`, wait for the first user gesture/event.');
+    }
   }
 }

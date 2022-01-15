@@ -16,21 +16,3 @@ export function createAudioContext(): AudioContext {
 
   return new Context();
 }
-
-/**
- * If an audio context is created `onLoad` it will have to be resumed
- * before it can be used. Must be called after a user gesture, eg `onClick`.
- *
- * See: https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
- */
-export function resumeAudioContext(context: AudioContext): void {
-  if (context.state === 'closed') {
-    throw new Error('Unable to resume a closed `AudioContext`.');
-  }
-
-  context.resume();
-
-  if (context.state !== 'running') {
-    throw new Error('Failed to resume `AudioContext`, have you waited for a user gesture.');
-  }
-}
